@@ -1,11 +1,11 @@
+import path from 'object-path'
 import {connect} from 'react-redux'
 import EventManager from '../../event-manager'
-import { pushLocation } from '../../actions/navigation-actions'
-import { setPlayerName, setRoomCode } from '../../actions/app-actions.js'
+import { Context, namespace, selector, action, state } from '../../rna'
 
 //map state to props function provides access to data from the state tree
 //similar to selecetors (later on will replace with createSelector from reselect like we do at machobear)
-const mapStateToProps = state => ({
+/*const mapStateToProps = state => ({
 	playerName: state.app.playerName,
 	roomCode: state.app.roomCode
 })
@@ -44,3 +44,18 @@ const mergeProps = (propsFromState, propsFromDispatch, ownProps) => ({
 //connect will return another function that does the actual  connecting, so when you import it you need to do connect(view)
 //where view is your react component that you want to be able to receive data from the state tree
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)
+*/
+
+
+const context = Context([
+
+	selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
+	selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
+
+	action('setPlayerName', (event) => state.update('app.playerName', event.target.value)),
+	action('setRoomCode', (event) => state.update('app.roomCode', event.target.value)),
+
+	action('goToTest', () => EventManager.emit('pushLocation', 'test', {v: 'v'}))
+])
+
+export default context

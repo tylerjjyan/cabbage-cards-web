@@ -1,27 +1,27 @@
-/*
-
-	IGNORE PAGE FOR NOW, USE 'navigation-actions' TO  HANDLE NAVIGATION
-*/
-
 import eventManager from './event-manager'
-
-var State = {}
+import { state } from './rna'
 
 const Location = {
 	pageName: '',
 	params: {}
 }
 
-const Navigation = {
-	pastLocations: [],
+let navigation = {
+	previousPages: [],
 	currentLocation: null
 }
 
-const createLocation = (pageName, params) =>
-	Object.assign({}, Location, {pageName, params})
+const createLocation = (pageName, params) => (
+	{...Location, pageName, params}
+)
 
 function initializeNavigation() {
-	State.Navigation = Object.assign({}, Navigation)
+	navigation = {
+		currentLocation: {pageName: 'home', params: null},
+		previousPages: []
+	}
+
+	state.update('navigation', navigation)
 
 	eventManager.on('pushLocation', pushLocation)
 	eventManager.on('goTo', goTo)
@@ -29,28 +29,28 @@ function initializeNavigation() {
 
 function pushLocation(pageName, params) {
 	
-	if(!('Navigation' in State)) {
+	if(navigation.currentLocation === null) {
 
 		initializeNavigation();
 		goTo(pageName, params);
 		return
 	}
 
-	if(State.Navigation.currentLocation !== null)
-	 State.Navigation.pastLocations.push(Navigation.currentLocation)
+	navigation.previousPages.push(navigation.currentLocation)
+	navigation.currentLocation = createLocation(pageName, params)
 
-	State.Navigation.currentLocation = createLocation(pageName, params)
+	state.update('navigation', navigation)
 }
 
 function goTo(pageName, params) {
 
-	if(!('Navigation' in State)) {
+	if(navigation.currentLocation === null)
+		initializeNavigation()
 
-		initializeNavigation();
-	}
+	navigation.previousPages = []
+	navigation.currentLocation = createLocation(pageName, params)
 
-	State.Navigation.pastLocations = []
-	State.Navigation.currentLocation = createLocation(pageName, params)
+	state.update('navigation', navigation)
 }
 
 export {
