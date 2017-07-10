@@ -1,7 +1,7 @@
 import path from 'object-path'
 import {connect} from 'react-redux'
-import EventManager from '../../event-manager'
-import { Context, namespace, selector, action, state } from '../../rna'
+import EventManager, { send } from '../../event-manager'
+import { Context, namespace, selector, action, state, on } from '../../rna'
 
 //map state to props function provides access to data from the state tree
 //similar to selecetors (later on will replace with createSelector from reselect like we do at machobear)
@@ -48,14 +48,23 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)
 
 
 const context = Context([
-
+	namespace('connectionScreen'),
 	selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
 	selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
 
 	action('setPlayerName', (event) => state.update('app.playerName', event.target.value)),
 	action('setRoomCode', (event) => state.update('app.roomCode', event.target.value)),
 
-	action('goToTest', () => EventManager.emit('pushLocation', 'test', {v: 'v'}))
+	action('goToTest', () => send('pushLocation', 'test', {v: 'v'})),
+
+	action('connectToServer', () => {
+			send('connectToServer', state.get('app.playerName'), state.get('app.roomCode'))}
+			),
+
+	on('connectToServer/accept', () => console.log('CONNECTED')),
+	on('connectToServer/reject', () => console.log('CONNECTED')),
+	on('connectToServer/error', () => console.log('CONNECTED')),
+	on('connectToServer/timeout', () => console.log('CONNECTED')),
 ])
 
 export default context

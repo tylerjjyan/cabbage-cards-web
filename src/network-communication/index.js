@@ -9,13 +9,11 @@ var networkManager = {
 
 networkManager.connectToServer = function(playerName, roomCode) {
 	
-	console.log(this)
-	console.log(arguments)
 	this.socket.on('connect', () => this.sendConnectionParameters(playerName, roomCode) )
 	this.socket.on('webClientConnectionRequest/accept', this.onConnectionAccepted)
 	this.socket.on('webClientConnectionRequest/reject', this.onConnectionRejected)
-	this.socket.on('connect_error', () => EventManager.emit('connectionError'))
-	this.socket.on('connect_timeout', () => EventManager.emit('connectionError'))
+	this.socket.on('connect_error', () => EventManager.emit('connectToServer/error'))
+	this.socket.on('connect_timeout', () => EventManager.emit('connectToServer/timeout'))
 	this.socket.on('invalidRoomCode', () => console.log('invalidCode'))
 	this.socket.open()
 }
