@@ -1,6 +1,6 @@
 import path from 'object-path'
 import {connect} from 'react-redux'
-import EventManager, { send } from '../../event-manager'
+import { send } from '../../messaging'
 import { Context, namespace, selector, action, state, on } from '../../rna'
 
 //map state to props function provides access to data from the state tree
@@ -52,8 +52,8 @@ const context = Context([
 	selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
 	selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
 
-	action('setPlayerName', (event) => state.update('app.playerName', event.target.value)),
-	action('setRoomCode', (event) => state.update('app.roomCode', event.target.value)),
+	action('setPlayerName', (data, self) => {console.log(state.get(''));self.update('playerName', data.target.value)}),
+	action('setRoomCode', (data, self) => self.update('roomCode', data.target.value)),
 
 	action('goToTest', () => send('pushLocation', 'test', {v: 'v'})),
 

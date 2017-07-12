@@ -1,8 +1,10 @@
 import path from 'object-path'
 import {connect} from 'react-redux'
 
-import { receive } from '../event-manager'
+import { receive } from '../messaging'
 import map from '../utils/object-map'
+
+import self from './self'
 
 export const Context = arr => {
 	const namespace = 'name1'
@@ -32,7 +34,7 @@ export const selector = (name, func) => context => {
 }
 
 export const action = (name, func) => context => {
-	context.actions[name] = (...args) => { func(...args, context.self) }
+	context.actions[name] = (data, ...args) => {func(data, {...self, self: context.self}) }
 }
 
 export const on = (eventName, func) => context => {

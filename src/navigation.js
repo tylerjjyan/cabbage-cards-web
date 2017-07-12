@@ -1,4 +1,4 @@
-import eventManager from './event-manager'
+import { send, receive } from './messaging'
 import { state } from './rna'
 
 const Location = {
@@ -23,8 +23,8 @@ function initializeNavigation() {
 
 	state.update('navigation', navigation)
 
-	eventManager.on('pushLocation', pushLocation)
-	eventManager.on('goTo', goTo)
+	receive('pushLocation', pushLocation)
+	receive('goTo', goTo)
 }
 
 function pushLocation(pageName, params) {
