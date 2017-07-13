@@ -52,19 +52,21 @@ const context = Context([
 	selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
 	selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
 
-	action('setPlayerName', (data, self) => {console.log(state.get(''));self.update('playerName', data.target.value)}),
+	action('setPlayerName', (data, self) => self.update('playerName', data.target.value)),
 	action('setRoomCode', (data, self) => self.update('roomCode', data.target.value)),
 
 	action('goToTest', () => send('pushLocation', 'test', {v: 'v'})),
 
-	action('connectToServer', () => {
-			send('connectToServer', state.get('app.playerName'), state.get('app.roomCode'))}
-			),
+	action('connectToServer', (data, self) => { send('connectToServer', {
+			playerName: self.get('playerName'),
+			roomCode: self.get('roomCode')
+		})
+	}),
 
 	on('connectToServer/accept', () => console.log('CONNECTED')),
-	on('connectToServer/reject', () => console.log('CONNECTED')),
-	on('connectToServer/error', () => console.log('CONNECTED')),
-	on('connectToServer/timeout', () => console.log('CONNECTED')),
+	on('connectToServer/reject', (data) => console.log(data.message)),
+	on('connectToServer/error', () => console.log('ERROR')),
+	on('connectToServer/timeout', () => console.log('timeout')),
 ])
 
 export default context
