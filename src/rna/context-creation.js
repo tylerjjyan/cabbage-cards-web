@@ -41,7 +41,7 @@ export const variable = (name, defaultVal) => context => {
 	const selector = (_state, props) => { 
 		const stored = _self.get(name)
 		
-		if(stored === undefined)
+		if(stored === undefined && defaultVal !== undefined)
 			_self.update(name, defaultVal)
 
 		 return stored || _self.get(name)
