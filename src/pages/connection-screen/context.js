@@ -69,7 +69,7 @@ const context = Context([
 		pageName: 'test'
 	})),
 
-	on('connectToServer/reject', (data, self) => console.log(data.message)),
+	on('connectToServer/reject', (data, self) => console.log(data.message, self.get(''))),
 	on('connectToServer/error', (data, self) => {console.log(data, self)}),
 	on('connectToServer/timeout', () => console.log('timeout')),
 ])

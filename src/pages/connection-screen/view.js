@@ -9,12 +9,11 @@ const style = {
 
 //initial screen where players input the room code and their name
 const ConnectionScreen = props => {
-	console.log(props)
 	return(
 	<div style={style}>
 		<input type="text" placeholder="Player Name" id="playerNameField" onChange={props.setPlayerName.bind(this)} value={props.playerName}/>{/*i can make this as long as i want AHHAHAHA*/}
 		<input type="text" placeholder="Room Code" id="roomCodeField" onChange={props.setRoomCode.bind(this)} value={props.roomCode}/>
-		<button onClick={props.goToTest} id="connectButton">Connect</button>
+		<button onClick={props.connectToServer} id="connectButton">Connect</button>
 	</div>
 )}
 
