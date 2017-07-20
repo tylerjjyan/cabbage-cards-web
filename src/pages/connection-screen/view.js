@@ -14,7 +14,7 @@ const ConnectionScreen = props => {
 	<div style={style}>
 		<input type="text" placeholder="Player Name" id="playerNameField" onChange={props.setPlayerName.bind(this)} value={props.playerName}/>{/*i can make this as long as i want AHHAHAHA*/}
 		<input type="text" placeholder="Room Code" id="roomCodeField" onChange={props.setRoomCode.bind(this)} value={props.roomCode}/>
-		<button onClick={props.connectToServer} id="connectButton">Connect</button>
+		<button onClick={props.goToTest} id="connectButton">Connect</button>
 	</div>
 )}
 

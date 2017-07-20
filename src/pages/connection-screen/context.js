@@ -57,7 +57,7 @@ const context = Context([
 	action('setPlayerName', (data, self) => self.update('playerName', data.target.value)),
 	action('setRoomCode', (data, self) => self.update('roomCode', data.target.value)),
 
-	action('goToTest', () => send('pushLocation', 'test', {v: 'v'})),
+	action('goToTest', () => send('pushLocation', {pageName: 'test', params: {v: 'v'} })),
 
 	action('connectToServer', (data, self) => { send('connectToServer', {
 			playerName: self.get('playerName'),
