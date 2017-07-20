@@ -48,7 +48,7 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)
 
 
 const context = Context([
-	namespace('connectionScreen'),
+	//namespace('connectionScreen'),
 	//selector('playerName', (_state, props) => path.get(_state, 'connectionScreen.playerName')),
 	//selector('roomCode', (_state, props) => path.get(_state, 'connectionScreen.roomCode')),
 	variable('playerName', ''),
@@ -69,7 +69,7 @@ const context = Context([
 		pageName: 'test'
 	})),
 
-	on('connectToServer/reject', (data, self) => console.log(data.message, self.get(''))),
+	on('connectToServer/reject', (data, self) => console.log(data.message, self)),
 	on('connectToServer/error', (data, self) => {console.log(data, self)}),
 	on('connectToServer/timeout', () => console.log('timeout')),
 ])

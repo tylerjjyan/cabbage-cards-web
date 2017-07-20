@@ -1,5 +1,6 @@
 import path from 'object-path'
 import {connect} from 'react-redux'
+import uuid from 'uuid/v1'
 
 import { receive } from '../messaging'
 import map from '../utils/object-map'
@@ -8,7 +9,7 @@ import hasValue from '../utils/has-value'
 import self from './self'
 
 export const Context = arr => {
-	const namespace = 'name1'
+	const namespace = uuid()
 	
 	const createdContext = {
 		self: namespace,
