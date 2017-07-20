@@ -1,9 +1,9 @@
-import { Context, selector, action, mount, on, namespace } from './context-creation'
+import { Context, selector, action, mount, on, namespace, variable } from './context-creation'
 import bindStore from './initialization'
 import state from './state'
 
 export {
-	Context, selector, action, mount, on, namespace,
+	Context, selector, action, mount, on, namespace, variable,
 	bindStore,
 	state
 }

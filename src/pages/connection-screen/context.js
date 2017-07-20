@@ -1,7 +1,7 @@
 import path from 'object-path'
 import {connect} from 'react-redux'
 import { send } from '../../messaging'
-import { Context, namespace, selector, action, state, on } from '../../rna'
+import { Context, namespace, selector, action, state, on, variable } from '../../rna'
 
 //map state to props function provides access to data from the state tree
 //similar to selecetors (later on will replace with createSelector from reselect like we do at machobear)
@@ -49,8 +49,10 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)
 
 const context = Context([
 	namespace('connectionScreen'),
-	selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
-	selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
+	//selector('playerName', (_state, props) => path.get(_state, 'connectionScreen.playerName')),
+	//selector('roomCode', (_state, props) => path.get(_state, 'connectionScreen.roomCode')),
+	variable('playerName', ''),
+	variable('roomCode', ''),
 
 	action('setPlayerName', (data, self) => self.update('playerName', data.target.value)),
 	action('setRoomCode', (data, self) => self.update('roomCode', data.target.value)),
@@ -63,9 +65,12 @@ const context = Context([
 		})
 	}),
 
-	on('connectToServer/accept', () => console.log('CONNECTED')),
-	on('connectToServer/reject', (data) => console.log(data.message)),
-	on('connectToServer/error', () => console.log('ERROR')),
+	on('connectToServer/accept', () => send('pushLocation', {
+		pageName: 'test'
+	})),
+
+	on('connectToServer/reject', (data, self) => console.log(data.message)),
+	on('connectToServer/error', (data, self) => {console.log(data, self)}),
 	on('connectToServer/timeout', () => console.log('timeout')),
 ])
 

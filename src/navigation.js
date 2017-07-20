@@ -27,7 +27,7 @@ function initializeNavigation() {
 	receive('goTo', goTo)
 }
 
-function pushLocation(pageName, params) {
+function pushLocation({ pageName, params }) {
 	
 	if(navigation.currentLocation === null) {
 
@@ -42,7 +42,7 @@ function pushLocation(pageName, params) {
 	state.update('navigation', navigation)
 }
 
-function goTo(pageName, params) {
+function goTo({ pageName, params }) {
 
 	if(navigation.currentLocation === null)
 		initializeNavigation()

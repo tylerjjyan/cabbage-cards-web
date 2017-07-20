@@ -26,10 +26,15 @@ networkManager.onServerMessage = function(data) {
 }
 
 networkManager.sendConnectionParameters = function(playerName, roomCode) {
-	console.log({ playerName, roomCode })
 	this.socket.emit('webClient', { playerName, roomCode })
 }
 
+networkManager.sendMessage = function(data) {
+	const {messageType, ...messageData} = data
+	this.socket.emit(messageType, messageData)
+}
+
 receive('connectToServer', networkManager.connectToServer.bind(networkManager))
+receive('sendToBackend', networkManager.sendMessage.bind(networkManager))
 
 export default networkManager
