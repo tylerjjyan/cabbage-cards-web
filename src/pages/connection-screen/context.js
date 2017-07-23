@@ -1,11 +1,11 @@
 import path from 'object-path'
-import { connect } from 'react-redux'
-import EventManager, { send } from '../../event-manager'
-import { Context, namespace, selector, action, state, on } from '../../rna'
+import {connect} from 'react-redux'
+import { send } from '../../messaging'
+import { Context, namespace, selector, action, state, on, variable } from '../../rna'
 
-// map state to props function provides access to data from the state tree
-// similar to selecetors (later on will replace with createSelector from reselect like we do at machobear)
-/* const mapStateToProps = state => ({
+//map state to props function provides access to data from the state tree
+//similar to selecetors (later on will replace with createSelector from reselect like we do at machobear)
+/*const mapStateToProps = state => ({
 	playerName: state.app.playerName,
 	roomCode: state.app.roomCode
 })
@@ -48,24 +48,30 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)
 
 
 const context = Context([
-  namespace('connectionScreen'),
-  selector('playerName', (_state, props) => path.get(_state, 'app.playerName')),
-  selector('roomCode', (_state, props) => path.get(_state, 'app.roomCode')),
+	//namespace('connectionScreen'),
+	//selector('playerName', (_state, props) => path.get(_state, 'connectionScreen.playerName')),
+	//selector('roomCode', (_state, props) => path.get(_state, 'connectionScreen.roomCode')),
+	variable('playerName', ''),
+	variable('roomCode', ''),
 
-  action('setPlayerName', event => state.update('app.playerName', event.target.value)),
-  action('setRoomCode', event => state.update('app.roomCode', event.target.value)),
+	action('setPlayerName', (data, self) => self.update('playerName', data.target.value)),
+	action('setRoomCode', (data, self) => self.update('roomCode', data.target.value)),
 
-  action('goToTest', () => send('pushLocation', 'test', { v: 'v' })),
+	action('goToTest', () => send('pushLocation', {pageName: 'test', params: {v: 'v'} })),
 
-  action('connectToServer', () => {
-    send('connectToServer', state.get('app.playerName'), state.get('app.roomCode'))
-  	}
-	),
+	action('connectToServer', (data, self) => { send('connectToServer', {
+			playerName: self.get('playerName'),
+			roomCode: self.get('roomCode')
+		})
+	}),
 
-  on('connectToServer/accept', () => console.log('CONNECTED')),
-  on('connectToServer/reject', () => console.log('CONNECTED')),
-  on('connectToServer/error', () => console.log('CONNECTED')),
-  on('connectToServer/timeout', () => console.log('CONNECTED')),
+	on('connectToServer/accept', () => send('pushLocation', {
+		pageName: 'test'
+	})),
+
+	on('connectToServer/reject', (data, self) => console.log(data.message, self)),
+	on('connectToServer/error', (data, self) => {console.log(data, self)}),
+	on('connectToServer/timeout', () => console.log('timeout')),
 ])
 
 export default context

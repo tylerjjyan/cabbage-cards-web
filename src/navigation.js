@@ -1,52 +1,56 @@
-import eventManager from './event-manager'
+import { send, receive } from './messaging'
 import { state } from './rna'
 
 const Location = {
-  pageName: '',
-  params: {}
+	pageName: '',
+	params: {}
 }
 
 let navigation = {
-  previousPages: [],
-  currentLocation: null
+	previousPages: [],
+	currentLocation: null
 }
 
 const createLocation = (pageName, params) => (
-	{ ...Location, pageName, params }
+	{...Location, pageName, params}
 )
 
 function initializeNavigation() {
-  navigation = {
-    currentLocation: { pageName: 'home', params: null },
-    previousPages: []
-  }
+	navigation = {
+		currentLocation: {pageName: 'home', params: null},
+		previousPages: []
+	}
 
-  state.update('navigation', navigation)
+	state.update('navigation', navigation)
 
-  eventManager.on('pushLocation', pushLocation)
-  eventManager.on('goTo', goTo)
+	receive('pushLocation', pushLocation)
+	receive('goTo', goTo)
 }
 
-function pushLocation(pageName, params) {
-  if (navigation.currentLocation === null) {
-    initializeNavigation()
-    goTo(pageName, params)
-    return
-  }
+function pushLocation({ pageName, params }) {
+	
+	if(navigation.currentLocation === null) {
 
-  navigation.previousPages.push(navigation.currentLocation)
-  navigation.currentLocation = createLocation(pageName, params)
+		initializeNavigation();
+		goTo(pageName, params);
+		return
+	}
 
-  state.update('navigation', navigation)
+	navigation.previousPages.push(navigation.currentLocation)
+	navigation.currentLocation = createLocation(pageName, params)
+
+	state.update('navigation', navigation)
 }
 
-function goTo(pageName, params) {
-  if (navigation.currentLocation === null) { initializeNavigation() }
+function goTo({ pageName, params }) {
 
-  navigation.previousPages = []
-  navigation.currentLocation = createLocation(pageName, params)
+	if(navigation.currentLocation === null)
+		initializeNavigation()
 
-  state.update('navigation', navigation)
+	navigation.previousPages = []
+	navigation.currentLocation = createLocation(pageName, params)
+
+	state.update('navigation', navigation)
 }
 
 export {
